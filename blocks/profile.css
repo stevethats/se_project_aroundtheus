@@ -1,0 +1,60 @@
+.profile {
+  max-width: 880px;
+  height: 120px;
+  margin: auto;
+  padding-top: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.profile__image {
+  background-color: #000000;
+  height: 120px;
+  width: 120px;
+  border-radius: 50%;
+  background-image: url("../images/jacques-cousteau.jpg");
+  background-position: center;
+  background-size: cover;
+  margin: 0 30px 0 0;
+}
+
+.profile__description {
+  width: 415px;
+  height: 77px;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile__description-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.profile__name {
+  margin: 0;
+  font-family: "Inter", Arial, sans-serif;
+  font-weight: 500;
+  font-size: 42px;
+  line-height: 1.15;
+}
+
+.profile__edit-button {
+  height: 24px;
+  width: 24px;
+  margin: 0;
+  align-self: center;
+}
+
+.profile__title {
+  margin: 7px 0 0;
+  font-family: "Inter", Arial, sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.21;
+}
+
+.profile__add-button {
+  margin: 0 0 0 auto;
+  padding-left: 15px;
+}
