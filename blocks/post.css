@@ -9,6 +9,9 @@
 .post__image {
   width: 282px;
   height: 282px;
+  border-radius: 10px;
+  /* border-top-left-radius: 10px;
+  border-top-right-radius: 10px; */
 }
 
 .post__details {
@@ -32,4 +35,6 @@
 
 .post__like {
   margin-left: auto;
+  height: 18px;
+  width: 21px;
 }
