@@ -1,0 +1,35 @@
+.post {
+  width: 282px;
+  height: 361px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  color: #000000;
+}
+
+.post__image {
+  width: 282px;
+  height: 282px;
+}
+
+.post__details {
+  display: flex;
+  margin: 0;
+  padding: 25px 20px;
+}
+
+.post__title {
+  margin: 0;
+  max-width: 219px;
+  height: 29px;
+  font-family: "Inter", Arial, sans-serif;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 1.21;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post__like {
+  margin-left: auto;
+}
