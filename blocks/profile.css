@@ -8,9 +8,6 @@
   font-weight: 500;
   font-size: 42px;
   line-height: 1.15;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .profile__image {
@@ -34,9 +31,13 @@
 .profile__name {
   grid-area: title;
   margin: 0;
+  max-width: 373px;
   font-weight: 500;
   font-size: 42px;
   line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .profile__edit-button {
@@ -46,6 +47,10 @@
   width: 24px;
   margin: 0 0 0 18px;
   align-self: center;
+}
+
+.profile__edit-button:hover {
+  opacity: 60%;
 }
 
 .profile__description {
@@ -62,4 +67,10 @@
   padding-left: 15px;
   width: 150px;
   height: 50px;
+  border: 2px;
+  transition: width 0.1s linear;
+}
+
+.profile__add-button:hover {
+  opacity: 60%;
 }
