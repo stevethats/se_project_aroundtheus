@@ -4,6 +4,7 @@
   background-color: #ffffff;
   border-radius: 10px;
   color: #000000;
+  /* font: normal 900 24px / 1.21 "Inter", Arial, sans-serif; */
 }
 
 .post__image {
@@ -27,6 +28,7 @@
   font-family: "Inter", Arial, sans-serif;
   font-weight: 900;
   font-size: 24px;
+  font-style: normal;
   line-height: 1.21;
   white-space: nowrap;
   overflow: hidden;

@@ -1,5 +1,42 @@
 .page {
   background-color: #000000;
   color: #ffffff;
-  padding: 15px;
+  padding-left: 17px;
+  padding-right: 17px;
+}
+
+.page__section {
+  max-width: 880px;
+  width: 100%;
+  position: relative;
+  margin: 0 auto;
+}
+
+.page__content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+@media screen and (max-width: 400px) {
+  .profile {
+    flex-direction: column;
+  }
+
+  .profile__image {
+  }
+
+  .profile__description {
+    justify-content: center;
+  }
+
+  .profile__name {
+    font-size: 22px;
+    line-height: 1.21;
+  }
+
+  .profile__title {
+    font-size: 14px;
+    text-align: center;
+  }
 }
