@@ -1,10 +1,12 @@
 .post {
   width: 282px;
   height: 361px;
-  background-color: #ffffff;
   border-radius: 10px;
   color: #000000;
-  /* font: normal 900 24px / 1.21 "Inter", Arial, sans-serif; */
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1.21;
 }
 
 .post__image {
@@ -12,18 +14,24 @@
   height: 282px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  object-fit: cover;
+  display: block;
 }
 
 .post__details {
   display: flex;
   margin: 0;
   padding: 25px 20px;
+  background-color: #ffffff;
+  line-height: 1.21;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  align-items: center;
 }
 
 .post__title {
   margin: 0;
   max-width: 219px;
-  height: 29px;
   font-family: "Inter", Arial, sans-serif;
   font-weight: 900;
   font-size: 24px;
@@ -75,7 +83,7 @@
   .profile__name {
     font-size: 22px;
     line-height: 1.21;
-    padding: 0 0 0 62px;
+    padding: 0 0 0 32px;
   }
 
   .profile__edit-button {

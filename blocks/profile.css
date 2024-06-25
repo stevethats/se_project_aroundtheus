@@ -19,19 +19,16 @@
 }
 
 .profile__info {
-  max-width: 415px;
   display: grid;
   grid-template-areas:
     "title button"
     "description description";
-  grid-template-columns: minmax(auto, 373px) auto;
   padding-right: 17px;
 }
 
 .profile__name {
   grid-area: title;
   margin: 0;
-  max-width: 373px;
   font-weight: 500;
   font-size: 42px;
   line-height: 1.15;
@@ -47,6 +44,7 @@
   width: 24px;
   margin: 0 0 0 18px;
   align-self: center;
+  border: 1px;
 }
 
 .profile__edit-button:hover {
@@ -67,7 +65,7 @@
   padding-left: 15px;
   width: 150px;
   height: 50px;
-  border: 2px;
+  border: 2px solid #f6f6f6;
   transition: width 0.1s linear;
 }
 
