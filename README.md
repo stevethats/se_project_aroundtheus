@@ -16,6 +16,8 @@ This project is created so all the elements are displayed correctly on popular s
 
 - [Link for project explination](https://drive.google.com/file/d/1ND0_pRscQMJI2FbSd1QL9Ag0HkfJBUrW/view?usp=sharing)
 
+- [Deploy Project](https://stevethats.github.io/se_project_aroundtheus/)
+
 **Images**
 
 The way you'll do this at work is by exporting images directly from Figma — we recommend doing that to practice more. Don't forget to optimize them [here](https://tinypng.com/), so your project loads faster.
