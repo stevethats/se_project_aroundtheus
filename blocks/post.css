@@ -1,19 +1,17 @@
 .post {
-  width: 282px;
-  height: 361px;
+  max-width: 282px;
   border-radius: 10px;
   color: #000000;
   font-family: "Inter", Arial, sans-serif;
   font-size: 24px;
   font-weight: 900;
   line-height: 1.21;
+  overflow: hidden;
 }
 
 .post__image {
   width: 282px;
   height: 282px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
   object-fit: cover;
   display: block;
 }
@@ -24,8 +22,6 @@
   padding: 25px 20px;
   background-color: #ffffff;
   line-height: 1.21;
-  border-bottom-right-radius: 10px;
-  border-bottom-left-radius: 10px;
   align-items: center;
 }
 
@@ -44,60 +40,13 @@
 
 .post__like {
   margin-left: auto;
+  background: transparent url("../images/like_button.svg") center no-repeat;
   height: 18px;
   width: 21px;
+  border: none;
 }
 
 .post__like:hover {
   opacity: 50%;
-}
-
-@media screen and (max-width: 785px) {
-  .profile__image {
-    margin-right: 10px;
-  }
-
-  .profile__add-button {
-    width: 50px;
-  }
-}
-
-@media screen and (max-width: 633px) {
-  .profile {
-    flex-direction: column;
-  }
-
-  .profile__image {
-    margin: 0;
-  }
-
-  .profile__info {
-    display: flex;
-    flex-wrap: wrap;
-    max-width: 100%;
-    margin-top: 30px;
-    margin-bottom: 36px;
-    padding: 0;
-  }
-
-  .profile__name {
-    font-size: 22px;
-    line-height: 1.21;
-    padding: 0 0 0 32px;
-  }
-
-  .profile__edit-button {
-    margin: 0 0 0 10px;
-  }
-
-  .profile__description {
-    font-size: 14px;
-    text-align: center;
-    width: 100%;
-  }
-
-  .profile__add-button {
-    margin: 0;
-    width: 100%;
-  }
+  cursor: pointer;
 }

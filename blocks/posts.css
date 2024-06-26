@@ -6,3 +6,16 @@
   gap: 20px 17px;
   justify-content: center;
 }
+
+@media screen and (max-width: 633px) {
+  .posts {
+    margin: 36px auto 0;
+    padding: 0 10px;
+  }
+}
+
+@media screen and (max-width: 590px) {
+  .posts {
+    padding: 0;
+  }
+}
