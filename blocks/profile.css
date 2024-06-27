@@ -58,6 +58,10 @@
   font-weight: 400;
   font-size: 18px;
   line-height: 1.21;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 415px;
 }
 
 .profile__add-button {
