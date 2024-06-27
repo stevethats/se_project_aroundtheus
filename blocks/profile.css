@@ -28,6 +28,7 @@
 
 .profile__name {
   grid-area: title;
+  max-width: 400px;
   margin: 0;
   font-weight: 500;
   font-size: 42px;
@@ -105,9 +106,11 @@
     margin-top: 30px;
     margin-bottom: 36px;
     padding: 0;
+    justify-content: center;
   }
 
   .profile__name {
+    max-width: 222px;
     font-size: 22px;
     line-height: 1.21;
     padding: 0 0 0 32px;
