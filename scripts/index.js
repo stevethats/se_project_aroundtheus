@@ -35,6 +35,16 @@ const editProfileTitle = editProfileBox.querySelector(".modal__form-title");
 const editProfileDescription = editProfileBox.querySelector(
   ".modal__form-description"
 );
+let postTemplate = document.querySelector("#post").content;
+let postsSection = document.querySelector(".posts");
+
+function getCardElement(data) {
+  let cardElement = postTemplate.querySelector(".post").cloneNode(true);
+  cardElement.querySelector(".post__image").src = data.link;
+  cardElement.querySelector(".post__image").alt = data.name;
+  cardElement.querySelector(".post__title").textContent = data.name;
+  postsSection.append(cardElement);
+}
 
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
@@ -54,3 +64,7 @@ editProfileCloseButton.addEventListener("click", function () {
 });
 
 editProfileForm.addEventListener("submit", handleProfileFormSubmit);
+
+for (let i = 0; i < initialCards.length; i++) {
+  getCardElement(initialCards[i]);
+}
