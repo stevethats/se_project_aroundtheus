@@ -1,4 +1,4 @@
-let initialCards = [
+const initialCards = [
   {
     name: "Yosemite Valley",
     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/yosemite.jpg",
@@ -28,29 +28,34 @@ let initialCards = [
 const editProfileEditButton = document.querySelector(".profile__edit-button");
 const editProfileBox = document.querySelector(".modal");
 const editProfileCloseButton = document.querySelector(".modal__close");
-const editProfileForm = document.querySelector(".modal__form");
+const editProfileForm = document.forms["modal__form"];
 const profileTitle = document.querySelector(".profile__name");
 const profileDescription = document.querySelector(".profile__description");
-const editProfileTitle = editProfileBox.querySelector(".modal__form-title");
+const editProfileTitle = editProfileBox.querySelector("[name='modal__title']");
 const editProfileDescription = editProfileBox.querySelector(
-  ".modal__form-description"
+  "[name='modal__description']"
 );
 let postTemplate = document.querySelector("#post").content;
 let postsSection = document.querySelector(".posts");
 
 function getCardElement(data) {
   let cardElement = postTemplate.querySelector(".post").cloneNode(true);
-  cardElement.querySelector(".post__image").src = data.link;
-  cardElement.querySelector(".post__image").alt = data.name;
+  const cardImage = cardElement.querySelector(".post__image");
+  cardImage.src = data.link;
+  cardImage.alt = data.name;
   cardElement.querySelector(".post__title").textContent = data.name;
-  postsSection.append(cardElement);
+  return cardElement;
+}
+
+function closeProfileModal() {
+  editProfileBox.classList.remove("modal_opened");
 }
 
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
   profileTitle.textContent = editProfileTitle.value;
   profileDescription.textContent = editProfileDescription.value;
-  editProfileBox.classList.remove("modal_opened");
+  closeProfileModal();
 }
 
 editProfileEditButton.addEventListener("click", function () {
@@ -59,12 +64,10 @@ editProfileEditButton.addEventListener("click", function () {
   editProfileDescription.value = profileDescription.textContent;
 });
 
-editProfileCloseButton.addEventListener("click", function () {
-  editProfileBox.classList.remove("modal_opened");
-});
+editProfileCloseButton.addEventListener("click", closeProfileModal);
 
 editProfileForm.addEventListener("submit", handleProfileFormSubmit);
 
 for (let i = 0; i < initialCards.length; i++) {
-  getCardElement(initialCards[i]);
+  postsSection.append(getCardElement(initialCards[i]));
 }
