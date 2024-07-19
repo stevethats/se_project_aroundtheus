@@ -68,6 +68,4 @@ editProfileCloseButton.addEventListener("click", closeProfileModal);
 
 editProfileForm.addEventListener("submit", handleProfileFormSubmit);
 
-for (let i = 0; i < initialCards.length; i++) {
-  postsSection.append(getCardElement(initialCards[i]));
-}
+initialCards.forEach((card) => postsSection.append(getCardElement(card)));
