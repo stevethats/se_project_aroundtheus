@@ -25,47 +25,89 @@ const initialCards = [
   },
 ];
 
+//Calls for editing profile
 const editProfileEditButton = document.querySelector(".profile__edit-button");
-const editProfileBox = document.querySelector(".modal");
-const editProfileCloseButton = document.querySelector(".modal__close");
-const editProfileForm = document.forms["modal__form"];
+const editProfileBox = document.querySelector(".modal__profile");
+const editProfileCloseButton = editProfileBox.querySelector(".modal__close");
+const editProfileForm = document.forms["modal__profile-form"];
 const profileTitle = document.querySelector(".profile__name");
 const profileDescription = document.querySelector(".profile__description");
-const editProfileTitle = editProfileBox.querySelector("[name='modal__title']");
+const editProfileTitle = editProfileBox.querySelector("[name='modal__name']");
 const editProfileDescription = editProfileBox.querySelector(
   "[name='modal__description']"
 );
+
+//Calls for adding a post
+const addPostButton = document.querySelector(".profile__add-button");
+const addPostBox = document.querySelector(".modal__post");
+const addPostCloseButton = addPostBox.querySelector(".modal__close");
+const addPostForm = document.forms["modal__post-form"];
+const addPostTitle = addPostBox.querySelector("[name='modal__title']");
+const addPostUrl = addPostBox.querySelector("[name='modal__url']");
+
 let postTemplate = document.querySelector("#post").content;
 let postsSection = document.querySelector(".posts");
 
 function getCardElement(data) {
   let cardElement = postTemplate.querySelector(".post").cloneNode(true);
   const cardImage = cardElement.querySelector(".post__image");
+  const cardTitle = cardElement.querySelector(".post__title");
+  const deleteButton = cardElement.querySelector(".post__delete");
+  const likeButton = cardElement.querySelector(".post__like");
+
+  deleteButton.addEventListener("click", () => cardElement.remove());
+
+  likeButton.addEventListener("click", () =>
+    likeButton.classList.toggle("post__like_active")
+  );
+
   cardImage.src = data.link;
   cardImage.alt = data.name;
-  cardElement.querySelector(".post__title").textContent = data.name;
+  cardTitle.textContent = data.name;
   return cardElement;
 }
 
-function closeProfileModal() {
-  editProfileBox.classList.remove("modal_opened");
+function closeModal(box) {
+  box.classList.remove("modal_opened");
+}
+
+function openModal(box) {
+  box.classList.add("modal_opened");
 }
 
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
   profileTitle.textContent = editProfileTitle.value;
   profileDescription.textContent = editProfileDescription.value;
-  closeProfileModal();
+  closeModal(editProfileBox);
+}
+
+function handlePostFormSubmit(evt) {
+  evt.preventDefault();
+  const newPost = {
+    name: addPostTitle.value,
+    link: addPostUrl.value,
+  };
+  postsSection.prepend(getCardElement(newPost));
+  closeModal(addPostBox);
 }
 
 editProfileEditButton.addEventListener("click", function () {
-  editProfileBox.classList.add("modal_opened");
+  openModal(editProfileBox);
   editProfileTitle.value = profileTitle.textContent;
   editProfileDescription.value = profileDescription.textContent;
 });
 
-editProfileCloseButton.addEventListener("click", closeProfileModal);
+editProfileCloseButton.addEventListener("click", () =>
+  closeModal(editProfileBox)
+);
 
 editProfileForm.addEventListener("submit", handleProfileFormSubmit);
+
+addPostButton.addEventListener("click", () => openModal(addPostBox));
+
+addPostCloseButton.addEventListener("click", () => closeModal(addPostBox));
+
+addPostForm.addEventListener("submit", handlePostFormSubmit);
 
 initialCards.forEach((card) => postsSection.append(getCardElement(card)));

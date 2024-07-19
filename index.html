@@ -39,6 +39,7 @@
         <section class="posts">
           <template id="post">
             <div class="post">
+              <button class="post__delete" type="button"></button>
               <img class="post__image" />
               <div class="post__details">
                 <h2 class="post__title"></h2>
@@ -52,15 +53,16 @@
         <p class="footer__copyright">© 2022 Around The U.S.</p>
       </footer>
     </div>
-    <div class="modal">
+    <!-- Modal for editing profile -->
+    <div class="modal modal__profile">
       <div class="modal__container">
         <button class="modal__close"></button>
         <p class="modal__heading">Edit Profile</p>
-        <form class="modal__form" id="modal__form">
+        <form class="modal__form" id="modal__profile-form">
           <input
             class="modal__input modal__form-title"
             type="text"
-            name="modal__title"
+            name="modal__name"
           />
           <input
             class="modal__input modal__form-description"
@@ -68,6 +70,28 @@
             name="modal__description"
           />
           <button class="modal__save-button" type="submit">Save</button>
+        </form>
+      </div>
+    </div>
+    <!-- Modal for adding post -->
+    <div class="modal modal__post">
+      <div class="modal__container">
+        <button class="modal__close"></button>
+        <p class="modal__heading">New Place</p>
+        <form class="modal__form" id="modal__post-form">
+          <input
+            class="modal__input modal__form-title"
+            type="text"
+            name="modal__title"
+            placeholder="Title"
+          />
+          <input
+            class="modal__input modal__form-description"
+            type="text"
+            name="modal__url"
+            placeholder="Image link"
+          />
+          <button class="modal__save-button" type="submit">Create</button>
         </form>
       </div>
     </div>
