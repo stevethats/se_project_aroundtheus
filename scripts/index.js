@@ -45,8 +45,22 @@ const addPostForm = document.forms["modal__post-form"];
 const addPostTitle = addPostBox.querySelector("[name='modal__title']");
 const addPostUrl = addPostBox.querySelector("[name='modal__url']");
 
+//Calls for image expand modal
+const expandModal = document.querySelector(".modal__expand");
+const expandModalCloseButton = expandModal.querySelector(".modal__close");
+const expandModalImage = expandModal.querySelector(".modal__image");
+const expandModalText = expandModal.querySelector(".modal__text");
+
 let postTemplate = document.querySelector("#post").content;
 let postsSection = document.querySelector(".posts");
+
+function closeModal(box) {
+  box.classList.remove("modal_opened");
+}
+
+function openModal(box) {
+  box.classList.add("modal_opened");
+}
 
 function getCardElement(data) {
   let cardElement = postTemplate.querySelector(".post").cloneNode(true);
@@ -61,18 +75,16 @@ function getCardElement(data) {
     likeButton.classList.toggle("post__like_active")
   );
 
+  cardImage.addEventListener("click", () => {
+    expandModalImage.src = data.link;
+    expandModalText.textContent = data.name;
+    openModal(expandModal);
+  });
+
   cardImage.src = data.link;
   cardImage.alt = data.name;
   cardTitle.textContent = data.name;
   return cardElement;
-}
-
-function closeModal(box) {
-  box.classList.remove("modal_opened");
-}
-
-function openModal(box) {
-  box.classList.add("modal_opened");
 }
 
 function handleProfileFormSubmit(evt) {
@@ -92,22 +104,22 @@ function handlePostFormSubmit(evt) {
   closeModal(addPostBox);
 }
 
+//Edit Profile event listeners
 editProfileEditButton.addEventListener("click", function () {
   openModal(editProfileBox);
   editProfileTitle.value = profileTitle.textContent;
   editProfileDescription.value = profileDescription.textContent;
 });
-
 editProfileCloseButton.addEventListener("click", () =>
   closeModal(editProfileBox)
 );
-
 editProfileForm.addEventListener("submit", handleProfileFormSubmit);
 
+//Add Post event listeners
 addPostButton.addEventListener("click", () => openModal(addPostBox));
-
 addPostCloseButton.addEventListener("click", () => closeModal(addPostBox));
-
 addPostForm.addEventListener("submit", handlePostFormSubmit);
+
+expandModalCloseButton.addEventListener("click", () => closeModal(expandModal));
 
 initialCards.forEach((card) => postsSection.append(getCardElement(card)));

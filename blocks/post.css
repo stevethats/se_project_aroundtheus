@@ -33,6 +33,10 @@
   display: block;
 }
 
+.post__image:hover {
+  cursor: pointer;
+}
+
 .post__details {
   display: flex;
   margin: 0;

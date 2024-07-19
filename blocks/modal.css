@@ -29,6 +29,15 @@
   max-width: 430px;
 }
 
+.modal__expand-container {
+  position: relative;
+}
+
+.modal__image {
+  max-height: 75vh;
+  max-width: 75vw;
+}
+
 .modal__close {
   border: none;
   background-color: transparent;
@@ -41,6 +50,15 @@
   background-image: url("../images/close_icon.svg");
   background-repeat: no-repeat;
   background-size: contain;
+}
+
+.modal__text {
+  font-family: "Inter", Arial, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.21;
+  top: calc(100% + 10px);
+  left: 0;
 }
 
 .modal__heading {
