@@ -27,8 +27,7 @@ const initialCards = [
 
 //Calls for editing profile
 const editProfileEditButton = document.querySelector(".profile__edit-button");
-const editProfileBox = document.querySelector(".modal__profile");
-const editProfileCloseButton = editProfileBox.querySelector(".modal__close");
+const editProfileBox = document.querySelector("#profile-modal");
 const editProfileForm = document.forms["modal__profile-form"];
 const profileTitle = document.querySelector(".profile__name");
 const profileDescription = document.querySelector(".profile__description");
@@ -39,27 +38,26 @@ const editProfileDescription = editProfileBox.querySelector(
 
 //Calls for adding a post
 const addPostButton = document.querySelector(".profile__add-button");
-const addPostBox = document.querySelector(".modal__post");
-const addPostCloseButton = addPostBox.querySelector(".modal__close");
+const addPostBox = document.querySelector("#post-modal");
 const addPostForm = document.forms["modal__post-form"];
 const addPostTitle = addPostBox.querySelector("[name='modal__title']");
 const addPostUrl = addPostBox.querySelector("[name='modal__url']");
 
 //Calls for image expand modal
-const expandModal = document.querySelector(".modal__expand");
-const expandModalCloseButton = expandModal.querySelector(".modal__close");
+const expandModal = document.querySelector("#expand-modal");
 const expandModalImage = expandModal.querySelector(".modal__image");
 const expandModalText = expandModal.querySelector(".modal__text");
 
-let postTemplate = document.querySelector("#post").content;
-let postsSection = document.querySelector(".posts");
+const postTemplate = document.querySelector("#post").content;
+const postsSection = document.querySelector(".posts");
+const closeButtons = document.querySelectorAll(".modal__close");
 
-function closeModal(box) {
-  box.classList.remove("modal_opened");
+function closeModal(modal) {
+  modal.classList.remove("modal_opened");
 }
 
-function openModal(box) {
-  box.classList.add("modal_opened");
+function openModal(modal) {
+  modal.classList.add("modal_opened");
 }
 
 function getCardElement(data) {
@@ -77,6 +75,7 @@ function getCardElement(data) {
 
   cardImage.addEventListener("click", () => {
     expandModalImage.src = data.link;
+    expandModalImage.alt = data.name;
     expandModalText.textContent = data.name;
     openModal(expandModal);
   });
@@ -100,9 +99,20 @@ function handlePostFormSubmit(evt) {
     name: addPostTitle.value,
     link: addPostUrl.value,
   };
-  postsSection.prepend(getCardElement(newPost));
+  renderCard(newPost);
   closeModal(addPostBox);
+  addPostForm.reset();
 }
+
+function renderCard(card, method = "prepend") {
+  const cardElement = getCardElement(card);
+  postsSection[method](cardElement);
+}
+
+closeButtons.forEach((button) => {
+  const popup = button.closest(".modal");
+  button.addEventListener("click", () => closeModal(popup));
+});
 
 //Edit Profile event listeners
 editProfileEditButton.addEventListener("click", function () {
@@ -110,16 +120,10 @@ editProfileEditButton.addEventListener("click", function () {
   editProfileTitle.value = profileTitle.textContent;
   editProfileDescription.value = profileDescription.textContent;
 });
-editProfileCloseButton.addEventListener("click", () =>
-  closeModal(editProfileBox)
-);
 editProfileForm.addEventListener("submit", handleProfileFormSubmit);
 
 //Add Post event listeners
 addPostButton.addEventListener("click", () => openModal(addPostBox));
-addPostCloseButton.addEventListener("click", () => closeModal(addPostBox));
 addPostForm.addEventListener("submit", handlePostFormSubmit);
 
-expandModalCloseButton.addEventListener("click", () => closeModal(expandModal));
-
-initialCards.forEach((card) => postsSection.append(getCardElement(card)));
+initialCards.forEach((card) => renderCard(card, "append"));
