@@ -56,6 +56,8 @@ const modalList = document.querySelectorAll(".modal");
 function closeModal(modal) {
   modal.classList.remove("modal_opened");
   document.removeEventListener("keyup", handleEscUp);
+  const modalInputs = modal.querySelectorAll(`.modal__input`);
+  modalInputs.forEach(resetInputs);
 }
 
 function openModal(modal) {
@@ -105,12 +107,15 @@ function handlePostFormSubmit(evt) {
   };
   renderCard(newPost);
   closeModal(addPostBox);
-  addPostForm.reset();
 }
 
 function renderCard(card, method = "prepend") {
   const cardElement = getCardElement(card);
   postsSection[method](cardElement);
+}
+
+function resetInputs(inputElement) {
+  inputElement.value = "";
 }
 
 //Close form event listeners
