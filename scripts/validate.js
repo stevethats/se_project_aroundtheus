@@ -5,7 +5,7 @@ const showInputError = (formElement, inputElement, errorMessage) => {
   errorElement.classList.add("modal__input-error_active");
 };
 
-const hideErrorInput = (formElement, inputElement) => {
+const hideInputError = (formElement, inputElement) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.remove("modal__input_type_error");
   errorElement.classList.remove("modal__input-error_active");
@@ -16,7 +16,7 @@ const checkInputValidity = (formElement, inputElement) => {
   if (!inputElement.validity.valid) {
     showInputError(formElement, inputElement, inputElement.validationMessage);
   } else {
-    hideErrorInput(formElement, inputElement);
+    hideInputError(formElement, inputElement);
   }
 };
 
@@ -45,6 +45,15 @@ const setEventListeners = (formElement) => {
       checkInputValidity(formElement, inputElement);
       toggleButtonState(inputList, buttonElement);
     });
+  });
+};
+
+const resetInputErrors = () => {
+  const activePopup = document.querySelector(".modal_opened");
+  const activeForm = activePopup.querySelector(".modal__form");
+  const activeInputs = activePopup.querySelectorAll(".modal__input");
+  activeInputs.forEach((input) => {
+    hideInputError(activeForm, input);
   });
 };
 

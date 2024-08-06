@@ -61,6 +61,7 @@ function closeModal(modal) {
 function openModal(modal) {
   modal.classList.add("modal_opened");
   document.addEventListener("keyup", handleEscUp);
+  resetInputErrors();
 }
 
 function getCardElement(data) {
