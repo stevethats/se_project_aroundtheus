@@ -51,13 +51,16 @@ const expandModalText = expandModal.querySelector(".modal__text");
 const postTemplate = document.querySelector("#post").content;
 const postsSection = document.querySelector(".posts");
 const closeButtons = document.querySelectorAll(".modal__close");
+const modalList = document.querySelectorAll(".modal");
 
 function closeModal(modal) {
   modal.classList.remove("modal_opened");
+  document.removeEventListener("keyup", handleEscUp);
 }
 
 function openModal(modal) {
   modal.classList.add("modal_opened");
+  document.addEventListener("keyup", handleEscUp);
 }
 
 function getCardElement(data) {
@@ -109,10 +112,31 @@ function renderCard(card, method = "prepend") {
   postsSection[method](cardElement);
 }
 
+//Close form event listeners
 closeButtons.forEach((button) => {
   const popup = button.closest(".modal");
   button.addEventListener("click", () => closeModal(popup));
 });
+
+modalList.forEach((modal) => {
+  modal.addEventListener("click", (evt) => {
+    if (evt.target === evt.currentTarget) {
+      closeModal(evt.currentTarget);
+    }
+  });
+});
+
+function isEscEvent(evt, action) {
+  const activePopup = document.querySelector(".modal_opened");
+  if (evt.key === "Escape") {
+    action(activePopup);
+  }
+}
+
+function handleEscUp(evt) {
+  evt.preventDefault();
+  isEscEvent(evt, closeModal);
+}
 
 //Edit Profile event listeners
 editProfileEditButton.addEventListener("click", function () {
