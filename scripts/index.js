@@ -56,18 +56,15 @@ const modalList = document.querySelectorAll(".modal");
 function closeModal(modal) {
   modal.classList.remove("modal_opened");
   document.removeEventListener("keyup", handleEscUp);
-  const modalInputs = modal.querySelectorAll(`.modal__input`);
-  modalInputs.forEach(resetInputs);
 }
 
 function openModal(modal) {
   modal.classList.add("modal_opened");
   document.addEventListener("keyup", handleEscUp);
-  resetInputErrors();
 }
 
 function getCardElement(data) {
-  let cardElement = postTemplate.querySelector(".post").cloneNode(true);
+  const cardElement = postTemplate.querySelector(".post").cloneNode(true);
   const cardImage = cardElement.querySelector(".post__image");
   const cardTitle = cardElement.querySelector(".post__title");
   const deleteButton = cardElement.querySelector(".post__delete");
@@ -114,10 +111,6 @@ function renderCard(card, method = "prepend") {
   postsSection[method](cardElement);
 }
 
-function resetInputs(inputElement) {
-  inputElement.value = "";
-}
-
 //Close form event listeners
 closeButtons.forEach((button) => {
   const popup = button.closest(".modal");
@@ -133,8 +126,8 @@ modalList.forEach((modal) => {
 });
 
 function isEscEvent(evt, action) {
-  const activePopup = document.querySelector(".modal_opened");
   if (evt.key === "Escape") {
+    const activePopup = document.querySelector(".modal_opened");
     action(activePopup);
   }
 }

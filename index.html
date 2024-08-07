@@ -59,7 +59,7 @@
         <button class="modal__close"></button>
         <p class="modal__heading">Edit Profile</p>
         <form class="modal__form" id="modal__profile-form">
-          <div class="modal__form-title">
+          <div class="modal__form-input-section">
             <input
               class="modal__input"
               id="modal__form-name"
@@ -69,9 +69,9 @@
               minlength="2"
               maxlength="40"
             />
-            <span class="modal__form-name-error"></span>
+            <span class="modal__input-span modal__form-name-error"></span>
           </div>
-          <div class="modal__form-description">
+          <div class="modal__form-input-section">
             <input
               class="modal__input"
               id="modal__form-description"
@@ -81,9 +81,11 @@
               minlength="2"
               maxlength="200"
             />
-            <span class="modal__form-description-error"></span>
+            <span
+              class="modal__input-span modal__form-description-error"
+            ></span>
           </div>
-          <button class="modal__save-button" type="submit">Save</button>
+          <button class="modal__button" type="submit">Save</button>
         </form>
       </div>
     </div>
@@ -93,7 +95,7 @@
         <button class="modal__close"></button>
         <p class="modal__heading">New Place</p>
         <form class="modal__form" id="modal__post-form">
-          <div class="modal__form-title">
+          <div class="modal__form-input-section">
             <input
               class="modal__input"
               id="modal__form-title"
@@ -104,9 +106,9 @@
               minlength="2"
               maxlength="40"
             />
-            <span class="modal__form-title-error"></span>
+            <span class="modal__input-span modal__form-title-error"></span>
           </div>
-          <div class="modal__form-description">
+          <div class="modal__form-input-section">
             <input
               class="modal__input"
               id="modal__form-url"
@@ -115,9 +117,9 @@
               placeholder="Image link"
               required
             />
-            <span class="modal__form-url-error"></span>
+            <span class="modal__input-span modal__form-url-error"></span>
           </div>
-          <button class="modal__save-button" type="submit">Create</button>
+          <button class="modal__button" type="submit">Create</button>
         </form>
       </div>
     </div>
