@@ -104,6 +104,7 @@ function handlePostFormSubmit(evt) {
   };
   renderCard(newPost);
   closeModal(addPostBox);
+  addPostForm.reset();
 }
 
 function renderCard(card, method = "prepend") {
