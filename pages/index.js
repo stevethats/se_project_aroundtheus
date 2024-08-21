@@ -69,6 +69,7 @@ function openModal(modal) {
 
 //Validation
 const validationSettings = {
+  formSelector: ".modal__form",
   inputSelector: ".modal__input",
   submitButtonSelector: ".modal__button",
   inactiveButtonClass: "modal__button_disabled",
@@ -76,14 +77,20 @@ const validationSettings = {
   errorClass: "modal__input-error_enabled",
 };
 
-const editFormValidator = new FormValidator(
-  validationSettings,
-  editProfileForm
-);
-const addFormValidator = new FormValidator(validationSettings, addPostForm);
+const formValidators = {};
 
-editFormValidator.enableValidation();
-addFormValidator.enableValidation();
+const enableValidation = (config) => {
+  const formList = Array.from(document.querySelectorAll(config.formSelector));
+  formList.forEach((formElement) => {
+    const validator = new FormValidator(config, formElement);
+    const formId = formElement.getAttribute("id");
+
+    formValidators[formId] = validator;
+    validator.enableValidation();
+  });
+};
+
+enableValidation(validationSettings);
 
 //Handle functions
 const handleImageClick = (data) => {
@@ -109,6 +116,7 @@ function handlePostFormSubmit(evt) {
   renderCard(newPost);
   closeModal(addPostBox);
   addPostForm.reset();
+  formValidators[addPostForm.getAttribute("id")].resetValidation();
 }
 
 //Render card/post

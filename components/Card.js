@@ -6,29 +6,21 @@ export default class Card {
   }
 
   _setEventListeners() {
-    this._cardElement
-      .querySelector(".post__like")
-      .addEventListener("click", () => {
-        this._handleLikeButton();
-      });
+    this._likeButton.addEventListener("click", () => {
+      this._handleLikeButton();
+    });
 
-    this._cardElement
-      .querySelector(".post__delete")
-      .addEventListener("click", () => {
-        this._handleDeletePost();
-      });
+    this._deleteButton.addEventListener("click", () => {
+      this._handleDeletePost();
+    });
 
-    this._cardElement
-      .querySelector(".post__image")
-      .addEventListener("click", () => {
-        this._handleImageClick(this._data);
-      });
+    this._cardImage.addEventListener("click", () => {
+      this._handleImageClick(this._data);
+    });
   }
 
   _handleLikeButton() {
-    this._cardElement
-      .querySelector(".post__like")
-      .classList.toggle("post__like_active");
+    this._likeButton.classList.toggle("post__like_active");
   }
 
   _handleDeletePost() {
@@ -46,10 +38,14 @@ export default class Card {
   getView() {
     this._cardElement = this._getTemplate();
 
-    this._cardElement.querySelector(".post__image").src = this._data.link;
-    this._cardElement.querySelector(".post__image").alt = this._data.name;
-    this._cardElement.querySelector(".post__title").textContent =
-      this._data.name;
+    this._likeButton = this._cardElement.querySelector(".post__like");
+    this._deleteButton = this._cardElement.querySelector(".post__delete");
+    this._cardImage = this._cardElement.querySelector(".post__image");
+    this._cardName = this._cardElement.querySelector(".post__title");
+
+    this._cardImage.src = this._data.link;
+    this._cardImage.alt = this._data.name;
+    this._cardName.textContent = this._data.name;
 
     this._setEventListeners();
 
