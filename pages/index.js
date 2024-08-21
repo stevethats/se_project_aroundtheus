@@ -1,3 +1,6 @@
+import Card from "../components/Card.js";
+import FormValidator from "../components/FormValidator.js";
+
 const initialCards = [
   {
     name: "Yosemite Valley",
@@ -53,6 +56,8 @@ const postsSection = document.querySelector(".posts");
 const closeButtons = document.querySelectorAll(".modal__close");
 const modalList = document.querySelectorAll(".modal");
 
+const cardSelector = "#post";
+
 function closeModal(modal) {
   modal.classList.remove("modal_opened");
   document.removeEventListener("keyup", handleEscUp);
@@ -63,31 +68,31 @@ function openModal(modal) {
   document.addEventListener("keyup", handleEscUp);
 }
 
-function getCardElement(data) {
-  const cardElement = postTemplate.querySelector(".post").cloneNode(true);
-  const cardImage = cardElement.querySelector(".post__image");
-  const cardTitle = cardElement.querySelector(".post__title");
-  const deleteButton = cardElement.querySelector(".post__delete");
-  const likeButton = cardElement.querySelector(".post__like");
+//Validation
+const validationSettings = {
+  inputSelector: ".modal__input",
+  submitButtonSelector: ".modal__button",
+  inactiveButtonClass: "modal__button_disabled",
+  inputErrorClass: "modal__input_type_error",
+  errorClass: "modal__input-error_enabled",
+};
 
-  deleteButton.addEventListener("click", () => cardElement.remove());
+const editFormValidator = new FormValidator(
+  validationSettings,
+  editProfileForm
+);
+const addFormValidator = new FormValidator(validationSettings, addPostForm);
 
-  likeButton.addEventListener("click", () =>
-    likeButton.classList.toggle("post__like_active")
-  );
+editFormValidator.enableValidation();
+addFormValidator.enableValidation();
 
-  cardImage.addEventListener("click", () => {
-    expandModalImage.src = data.link;
-    expandModalImage.alt = data.name;
-    expandModalText.textContent = data.name;
-    openModal(expandModal);
-  });
-
-  cardImage.src = data.link;
-  cardImage.alt = data.name;
-  cardTitle.textContent = data.name;
-  return cardElement;
-}
+//Handle functions
+const handleImageClick = (data) => {
+  expandModalImage.src = data.link;
+  expandModalImage.alt = data.name;
+  expandModalText.textContent = data.name;
+  openModal(expandModal);
+};
 
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
@@ -107,9 +112,10 @@ function handlePostFormSubmit(evt) {
   addPostForm.reset();
 }
 
+//Render card/post
 function renderCard(card, method = "prepend") {
-  const cardElement = getCardElement(card);
-  postsSection[method](cardElement);
+  const cardElement = new Card(card, cardSelector, handleImageClick);
+  postsSection[method](cardElement.getView());
 }
 
 //Close form event listeners
