@@ -45,7 +45,6 @@ export default class Card {
 
   getView() {
     this._cardElement = this._getTemplate();
-    console.log(this._data.link);
 
     this._cardElement.querySelector(".post__image").src = this._data.link;
     this._cardElement.querySelector(".post__image").alt = this._data.name;

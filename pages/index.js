@@ -51,7 +51,6 @@ const expandModal = document.querySelector("#expand-modal");
 const expandModalImage = expandModal.querySelector(".modal__image");
 const expandModalText = expandModal.querySelector(".modal__text");
 
-const postTemplate = document.querySelector("#post").content;
 const postsSection = document.querySelector(".posts");
 const closeButtons = document.querySelectorAll(".modal__close");
 const modalList = document.querySelectorAll(".modal");
