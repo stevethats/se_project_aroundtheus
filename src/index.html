@@ -10,7 +10,6 @@
     />
     <meta name="author" content="Steve Thatsanithone" />
     <meta name="keywords" content="Media, Social, TripleTen" />
-    <link rel="stylesheet" href="./pages/index.css" />
     <link rel="shortcut icon" href="favicon.ico" />
   </head>
   <body class="page">
@@ -18,7 +17,7 @@
       <header class="header page__section">
         <img
           class="header__logo"
-          src="./images/header_logo.svg"
+          src="<%=require('./images/header_logo.svg')%>"
           alt="Around the US Logo"
         />
       </header>
@@ -26,7 +25,7 @@
         <section class="profile">
           <img
             class="profile__image"
-            src="./images/jacques-cousteau.jpg"
+            src="<%=require('./images/jacques-cousteau.jpg')%>"
             alt="Avatar"
           />
           <div class="profile__info">
@@ -132,6 +131,5 @@
         <p class="modal__text"></p>
       </div>
     </div>
-    <script src="./pages/index.js" type="module"></script>
   </body>
 </html>
