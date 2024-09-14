@@ -1,0 +1,137 @@
+import Card from "../components/Card.js";
+import FormValidator from "../components/FormValidator.js";
+import "./index.css";
+import { initialCards, validationSettings } from "../utils/constants.js";
+import PopupWithForm from "../components/PopupWithForm.js";
+import PopupWithImage from "../components/PopupWithImage.js";
+import UserInfo from "../components/UserInfo.js";
+import Section from "../components/Section.js";
+
+//Calls for editing profile
+const editProfileEditButton = document.querySelector(".profile__edit-button");
+const editProfileBox = document.querySelector("#profile-modal");
+const editProfileForm = document.forms["modal__profile-form"];
+const profileTitle = document.querySelector(".profile__name");
+const profileDescription = document.querySelector(".profile__description");
+const editProfileTitle = editProfileBox.querySelector("[name='modal__name']");
+const editProfileDescription = editProfileBox.querySelector(
+  "[name='modal__description']"
+);
+
+//Calls for adding a post
+const addPostButton = document.querySelector(".profile__add-button");
+const addPostBox = document.querySelector("#post-modal");
+const addPostForm = document.forms["modal__post-form"];
+const addPostTitle = addPostBox.querySelector("[name='modal__title']");
+const addPostUrl = addPostBox.querySelector("[name='modal__url']");
+
+//Calls for image expand modal
+const expandModal = document.querySelector("#expand-modal");
+const expandModalImage = expandModal.querySelector(".modal__image");
+const expandModalText = expandModal.querySelector(".modal__text");
+
+const postsSection = document.querySelector(".posts");
+const closeButtons = document.querySelectorAll(".modal__close");
+const modalList = document.querySelectorAll(".modal");
+
+const cardSelector = "#post";
+
+function closeModal(modal) {
+  modal.classList.remove("modal_opened");
+  document.removeEventListener("keyup", handleEscUp);
+}
+
+function openModal(modal) {
+  modal.classList.add("modal_opened");
+  document.addEventListener("keyup", handleEscUp);
+}
+
+const formValidators = {};
+
+const enableValidation = (config) => {
+  const formList = Array.from(document.querySelectorAll(config.formSelector));
+  formList.forEach((formElement) => {
+    const validator = new FormValidator(config, formElement);
+    const formId = formElement.getAttribute("id");
+
+    formValidators[formId] = validator;
+    validator.enableValidation();
+  });
+};
+
+enableValidation(validationSettings);
+
+//Handle functions
+const handleImageClick = (data) => {
+  expandModalImage.src = data.link;
+  expandModalImage.alt = data.name;
+  expandModalText.textContent = data.name;
+  openModal(expandModal);
+};
+
+const handleProfileFormSubmit = (evt) => {
+  evt.preventDefault();
+  profileTitle.textContent = editProfileTitle.value;
+  profileDescription.textContent = editProfileDescription.value;
+  closeModal(editProfileBox);
+};
+
+const handlePostFormSubmit = (evt) => {
+  evt.preventDefault();
+  const newPost = {
+    name: addPostTitle.value,
+    link: addPostUrl.value,
+  };
+  renderCard(newPost);
+  closeModal(addPostBox);
+  addPostForm.reset();
+  formValidators[addPostForm.getAttribute("id")].resetValidation();
+};
+
+//Render card/post
+function renderCard(card, method = "prepend") {
+  const cardElement = new Card(card, cardSelector, handleImageClick);
+  postsSection[method](cardElement.getView());
+}
+
+//Close form event listeners
+closeButtons.forEach((button) => {
+  const popup = button.closest(".modal");
+  button.addEventListener("click", () => closeModal(popup));
+});
+
+modalList.forEach((modal) => {
+  modal.addEventListener("click", (evt) => {
+    if (evt.target === evt.currentTarget) {
+      closeModal(evt.currentTarget);
+    }
+  });
+});
+
+const isEscEvent = (evt, action) => {
+  if (evt.key === "Escape") {
+    const activePopup = document.querySelector(".modal_opened");
+    action(activePopup);
+  }
+};
+
+const handleEscUp = (evt) => {
+  evt.preventDefault();
+  isEscEvent(evt, closeModal);
+};
+
+//Edit Profile event listeners
+editProfileEditButton.addEventListener("click", function () {
+  openModal(editProfileBox);
+  editProfileTitle.value = profileTitle.textContent;
+  editProfileDescription.value = profileDescription.textContent;
+});
+editProfileForm.addEventListener("submit", handleProfileFormSubmit);
+
+//Add Post event listeners
+addPostButton.addEventListener("click", () => openModal(addPostBox));
+addPostForm.addEventListener("submit", handlePostFormSubmit);
+
+initialCards.forEach((card) => renderCard(card, "append"));
+
+const testPopup = new Popup("#post-modal");
