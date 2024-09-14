@@ -7,6 +7,8 @@ import {
   selectors,
   addPostButton,
   editProfileButton,
+  profileNameInput,
+  profileJobInput,
 } from "../utils/constants.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import PopupWithImage from "../components/PopupWithImage.js";
@@ -19,11 +21,12 @@ const userInfo = new UserInfo({
 });
 
 editProfileButton.addEventListener("click", () => {
-  document.querySelector("#modal__input_type_name").value =
-    userInfo.getUserInfo().name;
-  document.querySelector("#modal__input_type_description").value =
-    userInfo.getUserInfo().job;
+  profileNameInput.value = userInfo.getUserInfo().name;
+  profileJobInput.value = userInfo.getUserInfo().job;
   profileFormPopup.open();
+  formValidators[
+    selectors.editProfileForm.getAttribute("id")
+  ].resetValidation();
 });
 
 addPostButton.addEventListener("click", () => {
@@ -36,31 +39,12 @@ const handleProfileFormSubmit = ({ name, job }) => {
 };
 
 const handlePostFormSubmit = ({ title, url }) => {
-  const newPost = [
-    {
-      name: title,
-      link: url,
-    },
-  ];
-  const newCard = new Section(
-    {
-      items: newPost,
-      renderer: (data) => {
-        const cardElement = new Card(
-          {
-            data,
-            handleImageClick: (imgData) => {
-              cardPreviewPopup.open(imgData);
-            },
-          },
-          selectors.postTemplate
-        );
-        cardSection.addNewItem(cardElement.getView());
-      },
-    },
-    selectors.postSection
-  );
-  newCard.renderItems();
+  const newPost = {
+    name: title,
+    link: url,
+  };
+  const newCard = createCard(newPost);
+  cardSection.addNewItem(newCard);
   postFormPopup.close();
 };
 
@@ -81,6 +65,19 @@ const enableValidation = (config) => {
 enableValidation(validationSettings);
 
 //create instances
+const createCard = (data) => {
+  const cardElement = new Card(
+    {
+      data,
+      handleImageClick: (imgData) => {
+        cardPreviewPopup.open(imgData);
+      },
+    },
+    selectors.postTemplate
+  );
+  return cardElement.getView();
+};
+
 const cardPreviewPopup = new PopupWithImage(selectors.previewPopup);
 const profileFormPopup = new PopupWithForm(
   selectors.editProfileModal,
@@ -95,16 +92,8 @@ const cardSection = new Section(
   {
     items: initialCards,
     renderer: (data) => {
-      const cardElement = new Card(
-        {
-          data,
-          handleImageClick: (imgData) => {
-            cardPreviewPopup.open(imgData);
-          },
-        },
-        selectors.postTemplate
-      );
-      cardSection.addItem(cardElement.getView());
+      const cardElement = createCard(data);
+      cardSection.addItem(cardElement);
     },
   },
   selectors.postSection

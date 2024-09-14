@@ -51,5 +51,11 @@ export const addPostButton = document.querySelector(".profile__add-button");
 export const editProfileButton = document.querySelector(
   ".profile__edit-button"
 );
+export const profileNameInput = document.querySelector(
+  "#modal__input_type_name"
+);
+export const profileJobInput = document.querySelector(
+  "#modal__input_type_description"
+);
 
 export const formValidators = {};
