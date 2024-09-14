@@ -8,7 +8,7 @@
 
 **Intro**
 
-This project is created so all the elements are displayed correctly on popular screen sizes. This is the most time spent on a project so far in order to create a smooth responsive page design with several positions changing based on viewport width. As well as using JavaScript to make the page more functional and user friendly.
+This project is created so all the elements are displayed correctly on popular screen sizes. This is the most time spent on a project so far in order to create a smooth responsive page design with several positions changing based on viewport width. JavaScript is used to make the page more functional and user friendly, as well as include Webpack and Object-Oriented Programming for loose coupling.
 
 **Links**
 
