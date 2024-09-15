@@ -40,8 +40,9 @@ export const selectors = {
   postTemplate: "#post",
   previewPopup: "#expand-modal",
   editProfileModal: "#profile-modal",
-  editProfileForm: "#modal__profile-form",
+  editProfileForm: "modal__profile-form",
   addPostModal: "#post-modal",
+  addPostForm: "modal__post-form",
   profileName: ".profile__name",
   profileJob: ".profile__description",
 };
@@ -57,5 +58,3 @@ export const profileNameInput = document.querySelector(
 export const profileJobInput = document.querySelector(
   "#modal__input_type_description"
 );
-
-export const formValidators = {};
