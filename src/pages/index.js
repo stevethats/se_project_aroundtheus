@@ -35,7 +35,6 @@ addPostButton.addEventListener("click", () => {
 const handleProfileFormSubmit = ({ name, job }) => {
   userInfo.setUserInfo({ name, job });
   profileFormPopup.close();
-  formValidators[selectors.editProfileForm].resetValidation();
 };
 
 const handlePostFormSubmit = ({ title, url }) => {
@@ -47,7 +46,7 @@ const handlePostFormSubmit = ({ title, url }) => {
   cardSection.addNewItem(newCard);
   postFormPopup.close();
 
-  formValidators[selectors.addPostForm].resetValidation();
+  formValidators[selectors.addPostForm].disableButton();
 };
 
 //Form validation
