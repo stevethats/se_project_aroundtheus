@@ -7,9 +7,12 @@ import {
   selectors,
   addPostButton,
   editProfileButton,
+  editProfileForm,
+  addPostForm,
   profileNameInput,
   profileJobInput,
   profilePictureModal,
+  profilePictureContainer,
   profilePicture,
   confirmDeleteModal,
   confirmDeletePostClose,
@@ -18,12 +21,12 @@ import {
 } from "../utils/constants.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import PopupWithImage from "../components/PopupWithImage.js";
-import Popup from "../components/Popup.js";
 import UserInfo from "../components/UserInfo.js";
 import Section from "../components/Section.js";
-import Api from "../components/Api.js";
+import { api } from "../components/Api.js";
 
-profilePictureModal.addEventListener("click", () => {
+//Event Listeners
+profilePictureContainer.addEventListener("click", () => {
   profilePictureFormPopup.open();
 });
 
@@ -39,32 +42,114 @@ addPostButton.addEventListener("click", () => {
   postFormPopup.open();
 });
 
+//Handle Submit functions
 const handleProfilePictureSubmit = ({ picture }) => {
-  profilePicture.src = picture;
-  profilePictureFormPopup.close();
+  renderLoading(true, profilePictureModal);
+
+  api
+    .updateAvatar(picture)
+    .then((avatarUrl) => {
+      profilePicture.src = avatarUrl;
+    })
+    .catch((error) => {
+      console.error(`Error: ${error}`);
+    })
+    .finally(() => {
+      profilePictureFormPopup.close();
+      renderLoading(false, profilePictureModal, "Save");
+    });
 };
 
 const handleProfileFormSubmit = ({ name, job }) => {
-  userInfo.setUserInfo({ name, job });
-  profileFormPopup.close();
+  renderLoading(true, editProfileForm, "Save");
+
+  api
+    .updateProfileInfo({ name, about: job })
+    .then((newData) => {
+      userInfo.setUserInfo({
+        name: newData.name,
+        job: newData.about,
+      });
+    })
+    .catch((error) => {
+      console.log(newData);
+      console.error(`Error: ${error}`);
+    })
+    .finally(() => {
+      renderLoading(true, editProfileForm, "Save");
+      profileFormPopup.close();
+    });
 };
 
 const handlePostFormSubmit = ({ title, url }) => {
+  renderLoading(true, addPostForm, "Save");
+
   const newPost = {
     name: title,
     link: url,
   };
-  const newCard = createCard(newPost);
-  cardSection.addNewItem(newCard);
-  postFormPopup.close();
+
+  api.createApiCard(newPost).then((createdCard) => {
+    cardSection.addNewItem(createCard(createdCard));
+    renderLoading(false, addPostForm, "Save");
+    postFormPopup.close();
+  });
 
   formValidators[selectors.addPostForm].disableButton();
 };
 
-const handleConfirmDelete = () => {
-  confirmDeleteModal.classList.add("modal_opened");
+const openConfirmDelete = () => {
+  confirmDeletePopup.open();
   formValidators[selectors.confirmDeleteForm].enableButton();
 };
+
+const handleConfirmDeleteSubmit = (card) => {
+  renderLoading(true, confirmDeleteForm, "Delete");
+
+  api
+    .deleteCard(card._data._id)
+    .then(() => {
+      card.handleDeletePost();
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+    .finally(() => {
+      renderLoading(false, confirmDeleteForm, "Delete");
+      confirmDeletePopup.close();
+    });
+};
+
+const handleLike = (card) => {
+  if (!card._data.isLiked) {
+    console.log(card);
+    api
+      .likeCard(card._data._id)
+      .then(() => {
+        card.handleAddLikeButton();
+      })
+      .catch((error) => {
+        console.error(`Error adding like: ${error}`);
+      });
+  } else {
+    api
+      .dislikeCard(card._data._id)
+      .then(() => {
+        card.handleRemoveLikeButton();
+      })
+      .catch((error) => {
+        console.error(`Error removing like: ${error}`);
+      });
+  }
+};
+
+function renderLoading(isLoading, modal, text) {
+  if (isLoading) {
+    modal.querySelector(".modal__button").textContent = "Saving...";
+  } else {
+    modal.querySelector(".modal__button").textContent = text;
+  }
+}
 
 //Form validation
 const formValidators = {};
@@ -95,7 +180,9 @@ const createCard = (data) => {
       handleImageClick: (imgData) => {
         cardPreviewPopup.open(imgData);
       },
-      handleConfirmDelete,
+      handleLike,
+      openConfirmDelete,
+      handleConfirmDeleteSubmit,
     },
     selectors.postTemplate
   );
@@ -107,10 +194,12 @@ const profilePictureFormPopup = new PopupWithForm(
   selectors.profilePictureModal,
   handleProfilePictureSubmit
 );
+
 const profileFormPopup = new PopupWithForm(
   selectors.editProfileModal,
   handleProfileFormSubmit
 );
+
 const postFormPopup = new PopupWithForm(
   selectors.addPostModal,
   handlePostFormSubmit
@@ -118,12 +207,11 @@ const postFormPopup = new PopupWithForm(
 
 const confirmDeletePopup = new PopupWithForm(
   selectors.confirmDeletePostModal,
-  handleConfirmDelete
+  openConfirmDelete
 );
 
 const cardSection = new Section(
   {
-    items: initialCards,
     renderer: (data) => {
       const cardElement = createCard(data);
       cardSection.addItem(cardElement);
@@ -133,17 +221,24 @@ const cardSection = new Section(
 );
 
 //initialize instances
-cardSection.renderItems();
+
+//Initial Cards
+api
+  .getInitialCards()
+  .then((cards) => {
+    cardSection.renderItems(cards);
+  })
+  .catch((error) => {
+    console.error(`Error: ${error}`);
+  });
 cardPreviewPopup.setEventListeners();
 profileFormPopup.setEventListeners();
 postFormPopup.setEventListeners();
 profilePictureFormPopup.setEventListeners();
 confirmDeletePopup.setEventListeners();
 
-// const api = new Api(configApi);
-
 // api
-//   .getInitialCards()
+//   .deleteCard("66fbc3efc26271001a0ffc20")
 //   .then((result) => {
 //     return result;
 //   })
@@ -152,10 +247,29 @@ confirmDeletePopup.setEventListeners();
 //   });
 
 // api
-//   .getUserInfo()
+//   .likeCard("66fbc39ac26271001a0ffc14")
 //   .then((result) => {
 //     return result;
 //   })
 //   .catch((err) => {
 //     console.error(err);
+//   });
+
+// api
+//   .dislikeCard("66fbc39ac26271001a0ffc14")
+//   .then((result) => {
+//     return result;
+//   })
+//   .catch((err) => {
+//     console.error(err);
+//   });
+
+// api
+//   .createApiCard({
+//     name: "Yosemite Valley",
+//     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/yosemite.jpg",
+//   })
+//   .then((createdCard) => {
+//     cardSection.addNewItem(createCard(createdCard));
+//     postFormPopup.close();
 //   });

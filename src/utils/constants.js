@@ -52,12 +52,16 @@ export const selectors = {
   profileAvatar: ".profile__image",
 };
 
-export const profilePictureModal = document.querySelector(
+export const profilePictureContainer = document.querySelector(
   ".profile__image-container"
 );
 
 export const profilePicture = document.querySelector(".profile__image");
+export const profilePictureModal = document.querySelector(
+  "#modal__profile-picture-form"
+);
 
+export const editProfileForm = document.querySelector("#modal__profile-form");
 export const editProfileButton = document.querySelector(
   ".profile__edit-button"
 );
@@ -69,6 +73,7 @@ export const profileJobInput = document.querySelector(
 );
 
 export const addPostButton = document.querySelector(".profile__add-button");
+export const addPostForm = document.querySelector("#modal__post-form");
 
 export const confirmDeleteModal = document.querySelector("#post-delete-modal");
 export const confirmDeletePostClose =
