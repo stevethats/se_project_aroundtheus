@@ -18,6 +18,22 @@
   margin-right: 30px;
 }
 
+.profile__image-edit {
+  position: absolute;
+  height: 120px;
+  width: 120px;
+  border-radius: 50%;
+  background: transparent url("../images/edit-profile-picture-icon.svg") center
+    no-repeat;
+  background-color: #000;
+  opacity: 0%;
+}
+
+.profile__image-edit:hover {
+  cursor: pointer;
+  opacity: 80%;
+}
+
 .profile__info {
   display: grid;
   grid-template-areas:

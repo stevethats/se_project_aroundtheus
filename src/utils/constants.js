@@ -39,15 +39,24 @@ export const selectors = {
   postSection: ".posts",
   postTemplate: "#post",
   previewPopup: "#expand-modal",
+  profilePictureModal: "#profile-picture-modal",
+  profilePictureForm: "modal__profile-picture-form",
   editProfileModal: "#profile-modal",
   editProfileForm: "modal__profile-form",
   addPostModal: "#post-modal",
   addPostForm: "modal__post-form",
+  confirmDeletePostModal: "#post-delete-modal",
+  confirmDeleteForm: "modal__post-delete-form",
   profileName: ".profile__name",
   profileJob: ".profile__description",
+  profileAvatar: ".profile__image",
 };
 
-export const addPostButton = document.querySelector(".profile__add-button");
+export const profilePictureModal = document.querySelector(
+  ".profile__image-container"
+);
+
+export const profilePicture = document.querySelector(".profile__image");
 
 export const editProfileButton = document.querySelector(
   ".profile__edit-button"
@@ -58,3 +67,20 @@ export const profileNameInput = document.querySelector(
 export const profileJobInput = document.querySelector(
   "#modal__input_type_description"
 );
+
+export const addPostButton = document.querySelector(".profile__add-button");
+
+export const confirmDeleteModal = document.querySelector("#post-delete-modal");
+export const confirmDeletePostClose =
+  confirmDeleteModal.querySelector(".modal__close");
+export const confirmDeleteForm = document.querySelector(
+  "#modal__post-delete-form"
+);
+
+export const configApi = {
+  baseUrl: "https://around-api.en.tripleten-services.com/v1",
+  headers: {
+    authorization: "08fa7b89-3acd-41ff-a6cf-f3cd71b79ba3",
+    "Content-Type": "application/json",
+  },
+};

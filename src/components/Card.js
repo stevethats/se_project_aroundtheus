@@ -1,8 +1,15 @@
+import { selectors } from "../utils/constants";
+
 export default class Card {
-  constructor({ data, handleImageClick }, cardSelector) {
+  constructor({ data, handleImageClick, handleConfirmDelete }, cardSelector) {
     this._data = data;
     this._cardSelector = cardSelector;
     this._handleImageClick = handleImageClick;
+    this._handleConfirmDelete = handleConfirmDelete;
+    this._confirmDeleteModal = document.querySelector("#post-delete-modal");
+    this._confirmDeleteForm = document.querySelector(
+      "#modal__post-delete-form"
+    );
   }
 
   _setEventListeners() {
@@ -11,7 +18,12 @@ export default class Card {
     });
 
     this._deleteButton.addEventListener("click", () => {
-      this._handleDeletePost();
+      this._handleConfirmDelete();
+      this._confirmDeleteForm.addEventListener("submit", (evt) => {
+        evt.preventDefault();
+        this._cardElement.remove();
+        this._confirmDeleteModal.classList.remove("modal_opened");
+      });
     });
 
     this._cardImage.addEventListener("click", () => {
@@ -23,7 +35,8 @@ export default class Card {
     this._likeButton.classList.toggle("post__like_active");
   }
 
-  _handleDeletePost() {
+  _handleDeletePost(evt) {
+    evt.preventDefault();
     this._cardElement.remove();
     this._cardElement = null;
   }
