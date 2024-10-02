@@ -28,10 +28,11 @@ export default class Card {
 
     this._deleteButton.addEventListener("click", () => {
       this._openConfirmDelete();
-      this._confirmDeleteForm.addEventListener("submit", (evt) => {
-        evt.preventDefault();
-        this._handleConfirmDeleteSubmit(this);
-      });
+    });
+
+    this._confirmDeleteForm.addEventListener("submit", (evt) => {
+      evt.preventDefault();
+      this._handleConfirmDeleteSubmit(this);
     });
 
     this._cardImage.addEventListener("click", () => {

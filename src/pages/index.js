@@ -48,8 +48,8 @@ const handleProfilePictureSubmit = ({ picture }) => {
 
   api
     .updateAvatar(picture)
-    .then((avatarUrl) => {
-      profilePicture.src = avatarUrl;
+    .then((profileInfo) => {
+      profilePicture.src = profileInfo.avatar;
     })
     .catch((error) => {
       console.error(`Error: ${error}`);
@@ -121,12 +121,16 @@ const handleConfirmDeleteSubmit = (card) => {
 };
 
 const handleLike = (card) => {
+  const updateLikeState = () => {
+    card._data.isLiked = !card._data.isLiked;
+  };
+
   if (!card._data.isLiked) {
-    console.log(card);
     api
       .likeCard(card._data._id)
       .then(() => {
         card.handleAddLikeButton();
+        updateLikeState();
       })
       .catch((error) => {
         console.error(`Error adding like: ${error}`);
@@ -136,6 +140,7 @@ const handleLike = (card) => {
       .dislikeCard(card._data._id)
       .then(() => {
         card.handleRemoveLikeButton();
+        updateLikeState();
       })
       .catch((error) => {
         console.error(`Error removing like: ${error}`);
@@ -268,6 +273,56 @@ confirmDeletePopup.setEventListeners();
 //   .createApiCard({
 //     name: "Yosemite Valley",
 //     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/yosemite.jpg",
+//   })
+//   .then((createdCard) => {
+//     cardSection.addNewItem(createCard(createdCard));
+//     postFormPopup.close();
+//   });
+
+// api
+//   .createApiCard({
+//     name: "Lake Louise",
+//     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/lake-louise.jpg",
+//   })
+//   .then((createdCard) => {
+//     cardSection.addNewItem(createCard(createdCard));
+//     postFormPopup.close();
+//   });
+
+// api
+//   .createApiCard({
+//     name: "Bald Mountains",
+//     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/bald-mountains.jpg",
+//   })
+//   .then((createdCard) => {
+//     cardSection.addNewItem(createCard(createdCard));
+//     postFormPopup.close();
+//   });
+
+// api
+//   .createApiCard({
+//     name: "Latemar",
+//     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/latemar.jpg",
+//   })
+//   .then((createdCard) => {
+//     cardSection.addNewItem(createCard(createdCard));
+//     postFormPopup.close();
+//   });
+
+// api
+//   .createApiCard({
+//     name: "Vanoise National Park",
+//     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/vanoise.jpg",
+//   })
+//   .then((createdCard) => {
+//     cardSection.addNewItem(createCard(createdCard));
+//     postFormPopup.close();
+//   });
+
+// api
+//   .createApiCard({
+//     name: "Lago di Braies",
+//     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/lago.jpg",
 //   })
 //   .then((createdCard) => {
 //     cardSection.addNewItem(createCard(createdCard));
