@@ -60,6 +60,10 @@ export default class Card {
     this._cardImage.alt = this._data.name;
     this._cardName.textContent = this._data.name;
 
+    if (this._data.isLiked) {
+      this.handleAddLikeButton();
+    }
+
     this._setEventListeners();
 
     return this._cardElement;

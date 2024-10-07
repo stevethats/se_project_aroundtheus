@@ -238,11 +238,24 @@ api
   .catch((error) => {
     console.error(`Error: ${error}`);
   });
+
 cardPreviewPopup.setEventListeners();
 profileFormPopup.setEventListeners();
 postFormPopup.setEventListeners();
 profilePictureFormPopup.setEventListeners();
 confirmDeletePopup.setEventListeners();
+
+api
+  .getUserInfo()
+  .then((res) => {
+    return (
+      userInfo.setUserInfo({ name: res.name, job: res.about }),
+      (profilePicture.src = res.avatar)
+    );
+  })
+  .catch((error) => {
+    console.error(`Error: ${error}`);
+  });
 
 // api
 //   .deleteCard("66fbc3efc26271001a0ffc20")
