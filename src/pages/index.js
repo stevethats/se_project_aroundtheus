@@ -17,7 +17,6 @@ import {
   confirmDeleteModal,
   confirmDeletePostClose,
   confirmDeleteForm,
-  configApi,
 } from "../utils/constants.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import PopupWithImage from "../components/PopupWithImage.js";
@@ -100,21 +99,19 @@ const handleDelete = (card) => {
   confirmDeletePopup.open();
   formValidators[selectors.confirmDeleteForm].enableButton();
   confirmDeletePopup.setSubmitFunction(() => {
-    console.log("check 2");
-    renderLoading(true, confirmDeleteForm, "Deleting...", "Delete");
-
-    api
-      .deleteCard(card._data._id)
-      .then(() => {
+    function makeRequest() {
+      return api.deleteCard(card._data._id).then(() => {
         card.handleDeletePost();
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
-        confirmDeletePopup.close();
-        renderLoading(false, confirmDeleteForm, "Deleting...", "Delete");
       });
+    }
+
+    handleSubmit(
+      makeRequest,
+      confirmDeletePopup,
+      confirmDeleteForm,
+      "Deleting...",
+      "Delete"
+    );
   });
 };
 
