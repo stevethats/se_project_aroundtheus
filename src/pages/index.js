@@ -11,7 +11,7 @@ import {
   addPostForm,
   profileNameInput,
   profileJobInput,
-  profilePictureModal,
+  editProfilePictureForm,
   profilePictureContainer,
   profilePicture,
   confirmDeleteModal,
@@ -21,6 +21,7 @@ import {
 } from "../utils/constants.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import PopupWithImage from "../components/PopupWithImage.js";
+import PopupWithConfirm from "../components/PopupWithConfirm.js";
 import UserInfo from "../components/UserInfo.js";
 import Section from "../components/Section.js";
 import { api } from "../components/Api.js";
@@ -43,81 +44,78 @@ addPostButton.addEventListener("click", () => {
 });
 
 //Handle Submit functions
-const handleProfilePictureSubmit = ({ picture }) => {
-  renderLoading(true, profilePictureModal);
-
-  api
-    .updateAvatar(picture)
-    .then((profileInfo) => {
-      profilePicture.src = profileInfo.avatar;
+function handleSubmit(request, popupModal, popupForm, renderingText, postText) {
+  renderLoading(true, popupForm, renderingText, postText);
+  request()
+    .then(() => {
+      popupModal.close();
     })
-    .catch((error) => {
-      console.error(`Error: ${error}`);
-    })
+    .catch(console.error)
     .finally(() => {
-      profilePictureFormPopup.close();
-      renderLoading(false, profilePictureModal, "Save");
+      renderLoading(false, popupForm, renderingText, postText);
     });
+}
+
+const handleProfilePictureSubmit = ({ picture }) => {
+  function makeRequest() {
+    return api.updateAvatar(picture).then((profileInfo) => {
+      profilePicture.src = profileInfo.avatar;
+    });
+  }
+
+  handleSubmit(makeRequest, profilePictureFormPopup, editProfilePictureForm);
 };
 
 const handleProfileFormSubmit = ({ name, job }) => {
-  renderLoading(true, editProfileForm, "Save");
-
-  api
-    .updateProfileInfo({ name, about: job })
-    .then((newData) => {
+  function makeRequest() {
+    return api.updateProfileInfo({ name, about: job }).then((newData) => {
       userInfo.setUserInfo({
         name: newData.name,
         job: newData.about,
       });
-    })
-    .catch((error) => {
-      console.log(newData);
-      console.error(`Error: ${error}`);
-    })
-    .finally(() => {
-      renderLoading(true, editProfileForm, "Save");
-      profileFormPopup.close();
     });
+  }
+
+  handleSubmit(makeRequest, profileFormPopup, editProfileForm);
 };
 
 const handlePostFormSubmit = ({ title, url }) => {
-  renderLoading(true, addPostForm, "Save");
-
   const newPost = {
     name: title,
     link: url,
   };
 
-  api.createApiCard(newPost).then((createdCard) => {
-    cardSection.addNewItem(createCard(createdCard));
-    renderLoading(false, addPostForm, "Save");
-    postFormPopup.close();
-  });
+  function makeRequest() {
+    return api.createApiCard(newPost).then((createdCard) => {
+      cardSection.addNewItem(createCard(createdCard));
+    });
+  }
+
+  handleSubmit(makeRequest, postFormPopup, addPostForm);
 
   formValidators[selectors.addPostForm].disableButton();
 };
 
-const openConfirmDelete = () => {
+const handleDelete = (card) => {
   confirmDeletePopup.open();
   formValidators[selectors.confirmDeleteForm].enableButton();
-};
+  confirmDeletePopup.setSubmitFunction(() => {
+    console.log("check 2");
+    renderLoading(true, confirmDeleteForm, "Deleting...", "Delete");
 
-const handleConfirmDeleteSubmit = (card) => {
-  renderLoading(true, confirmDeleteForm, "Delete");
-
-  api
-    .deleteCard(card._data._id)
-    .then(() => {
-      card.handleDeletePost();
-    })
-    .catch((error) => {
-      console.error(error);
-    })
-    .finally(() => {
-      renderLoading(false, confirmDeleteForm, "Delete");
-      confirmDeletePopup.close();
-    });
+    api
+      .deleteCard(card._data._id)
+      .then(() => {
+        card.handleDeletePost();
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        confirmDeletePopup.close();
+        renderLoading(false, confirmDeleteForm, "Deleting...", "Delete");
+      });
+  });
 };
 
 const handleLike = (card) => {
@@ -148,11 +146,16 @@ const handleLike = (card) => {
   }
 };
 
-function renderLoading(isLoading, modal, text) {
+function renderLoading(
+  isLoading,
+  modal,
+  renderingText = "Saving...",
+  postText = "Save"
+) {
   if (isLoading) {
-    modal.querySelector(".modal__button").textContent = "Saving...";
+    modal.querySelector(".modal__button").textContent = renderingText;
   } else {
-    modal.querySelector(".modal__button").textContent = text;
+    modal.querySelector(".modal__button").textContent = postText;
   }
 }
 
@@ -186,8 +189,7 @@ const createCard = (data) => {
         cardPreviewPopup.open(imgData);
       },
       handleLike,
-      openConfirmDelete,
-      handleConfirmDeleteSubmit,
+      handleDelete,
     },
     selectors.postTemplate
   );
@@ -195,6 +197,7 @@ const createCard = (data) => {
 };
 
 const cardPreviewPopup = new PopupWithImage(selectors.previewPopup);
+
 const profilePictureFormPopup = new PopupWithForm(
   selectors.profilePictureModal,
   handleProfilePictureSubmit
@@ -210,9 +213,8 @@ const postFormPopup = new PopupWithForm(
   handlePostFormSubmit
 );
 
-const confirmDeletePopup = new PopupWithForm(
-  selectors.confirmDeletePostModal,
-  openConfirmDelete
+const confirmDeletePopup = new PopupWithConfirm(
+  selectors.confirmDeletePostModal
 );
 
 const cardSection = new Section(

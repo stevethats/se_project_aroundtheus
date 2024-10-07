@@ -1,20 +1,13 @@
 export default class Card {
   constructor(
-    {
-      data,
-      handleImageClick,
-      handleLike,
-      openConfirmDelete,
-      handleConfirmDeleteSubmit,
-    },
+    { data, handleImageClick, handleLike, handleDelete },
     cardSelector
   ) {
     this._data = data;
     this._cardSelector = cardSelector;
     this._handleImageClick = handleImageClick;
     this._handleLike = handleLike;
-    this._openConfirmDelete = openConfirmDelete;
-    this._handleConfirmDeleteSubmit = handleConfirmDeleteSubmit;
+    this._handleDelete = handleDelete;
     this._confirmDeleteModal = document.querySelector("#post-delete-modal");
     this._confirmDeleteForm = document.querySelector(
       "#modal__post-delete-form"
@@ -27,12 +20,7 @@ export default class Card {
     });
 
     this._deleteButton.addEventListener("click", () => {
-      this._openConfirmDelete();
-    });
-
-    this._confirmDeleteForm.addEventListener("submit", (evt) => {
-      evt.preventDefault();
-      this._handleConfirmDeleteSubmit(this);
+      this._handleDelete(this);
     });
 
     this._cardImage.addEventListener("click", () => {

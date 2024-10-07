@@ -57,7 +57,7 @@ export const profilePictureContainer = document.querySelector(
 );
 
 export const profilePicture = document.querySelector(".profile__image");
-export const profilePictureModal = document.querySelector(
+export const editProfilePictureForm = document.querySelector(
   "#modal__profile-picture-form"
 );
 
