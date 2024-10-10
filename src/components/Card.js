@@ -3,15 +3,11 @@ export default class Card {
     { data, handleImageClick, handleLike, handleDelete },
     cardSelector
   ) {
-    this._data = data;
+    this.data = data;
     this._cardSelector = cardSelector;
     this._handleImageClick = handleImageClick;
     this._handleLike = handleLike;
     this._handleDelete = handleDelete;
-    this._confirmDeleteModal = document.querySelector("#post-delete-modal");
-    this._confirmDeleteForm = document.querySelector(
-      "#modal__post-delete-form"
-    );
   }
 
   _setEventListeners() {
@@ -24,7 +20,7 @@ export default class Card {
     });
 
     this._cardImage.addEventListener("click", () => {
-      this._handleImageClick(this._data);
+      this._handleImageClick(this.data);
     });
   }
 
@@ -56,11 +52,11 @@ export default class Card {
     this._cardImage = this._cardElement.querySelector(".post__image");
     this._cardName = this._cardElement.querySelector(".post__title");
 
-    this._cardImage.src = this._data.link;
-    this._cardImage.alt = this._data.name;
-    this._cardName.textContent = this._data.name;
+    this._cardImage.src = this.data.link;
+    this._cardImage.alt = this.data.name;
+    this._cardName.textContent = this.data.name;
 
-    if (this._data.isLiked) {
+    if (this.data.isLiked) {
       this.handleAddLikeButton();
     }
 

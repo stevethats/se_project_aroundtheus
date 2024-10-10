@@ -52,19 +52,14 @@ export const selectors = {
   profileAvatar: ".profile__image",
 };
 
-export const profilePictureContainer = document.querySelector(
-  ".profile__image-container"
-);
-
-export const profilePicture = document.querySelector(".profile__image");
-export const editProfilePictureForm = document.querySelector(
-  "#modal__profile-picture-form"
-);
-
-export const editProfileForm = document.querySelector("#modal__profile-form");
 export const editProfileButton = document.querySelector(
   ".profile__edit-button"
 );
+export const editProfileForm = document.querySelector("#modal__profile-form");
+
+export const addPostButton = document.querySelector(".profile__add-button");
+export const addPostForm = document.querySelector("#modal__post-form");
+
 export const profileNameInput = document.querySelector(
   "#modal__input_type_name"
 );
@@ -72,12 +67,14 @@ export const profileJobInput = document.querySelector(
   "#modal__input_type_description"
 );
 
-export const addPostButton = document.querySelector(".profile__add-button");
-export const addPostForm = document.querySelector("#modal__post-form");
+export const profilePictureContainer = document.querySelector(
+  ".profile__image-container"
+);
 
-export const confirmDeleteModal = document.querySelector("#post-delete-modal");
-export const confirmDeletePostClose =
-  confirmDeleteModal.querySelector(".modal__close");
+export const editProfilePictureForm = document.querySelector(
+  "#modal__profile-picture-form"
+);
+
 export const confirmDeleteForm = document.querySelector(
   "#modal__post-delete-form"
 );

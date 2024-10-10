@@ -13,58 +13,54 @@ export class Api {
     return Promise.reject(`Error: ${res.status}`);
   }
 
-  _request(url, options) {
-    return fetch(url, options).then(this._checkResponse);
+  _request(endpoint, options = {}) {
+    const finalOptions = {
+      headers: this.headers,
+      ...options,
+    };
+    const url = `${this.baseUrl}${endpoint}`;
+    return fetch(url, finalOptions).then(this._checkResponse);
   }
 
   getInitialCards() {
-    return this._request(`${this.baseUrl}/cards`, {
-      headers: this.headers,
-    }).then((res) => {
+    return this._request(`/cards`).then((res) => {
       return res;
     });
   }
 
   createApiCard(data) {
-    return this._request(`${this.baseUrl}/cards`, {
-      headers: this.headers,
+    return this._request(`/cards`, {
       method: "POST",
       body: JSON.stringify(data),
     });
   }
 
   deleteCard(id) {
-    return this._request(`${this.baseUrl}/cards/${id}`, {
-      headers: this.headers,
+    return this._request(`/cards/${id}`, {
       method: "DELETE",
     });
   }
 
   likeCard(id) {
-    return this._request(`${this.baseUrl}/cards/${id}/likes`, {
-      headers: this.headers,
+    return this._request(`/cards/${id}/likes`, {
       method: "PUT",
     });
   }
 
   dislikeCard(id) {
-    return this._request(`${this.baseUrl}/cards/${id}/likes`, {
-      headers: this.headers,
+    return this._request(`/cards/${id}/likes`, {
       method: "DELETE",
     });
   }
 
   getUserInfo() {
-    return this._request(`${this.baseUrl}/users/me`, {
-      headers: this.headers,
-    }).then((res) => {
+    return this._request(`/users/me`).then((res) => {
       return res;
     });
   }
 
   updateProfileInfo({ name, about }) {
-    return this._request(`${this.baseUrl}/users/me`, {
-      headers: this.headers,
+    return this._request(`/users/me`, {
       method: "PATCH",
       body: JSON.stringify({
         name: name,
@@ -74,8 +70,7 @@ export class Api {
   }
 
   updateAvatar(data) {
-    return this._request(`${this.baseUrl}/users/me/avatar`, {
-      headers: this.headers,
+    return this._request(`/users/me/avatar`, {
       method: "PATCH",
       body: JSON.stringify({ avatar: data }),
     });

@@ -2,20 +2,16 @@ import "./index.css";
 import Card from "../components/Card.js";
 import FormValidator from "../components/FormValidator.js";
 import {
-  initialCards,
   validationSettings,
   selectors,
-  addPostButton,
   editProfileButton,
   editProfileForm,
+  addPostButton,
   addPostForm,
   profileNameInput,
   profileJobInput,
   editProfilePictureForm,
   profilePictureContainer,
-  profilePicture,
-  confirmDeleteModal,
-  confirmDeletePostClose,
   confirmDeleteForm,
 } from "../utils/constants.js";
 import PopupWithForm from "../components/PopupWithForm.js";
@@ -43,22 +39,27 @@ addPostButton.addEventListener("click", () => {
 });
 
 //Handle Submit functions
-function handleSubmit(request, popupModal, popupForm, renderingText, postText) {
-  renderLoading(true, popupForm, renderingText, postText);
+function handleSubmit(request, popupModal, popupForm, renderingText) {
+  popupModal.renderLoading(true, renderingText);
   request()
     .then(() => {
       popupModal.close();
+      popupForm.reset();
     })
     .catch(console.error)
     .finally(() => {
-      renderLoading(false, popupForm, renderingText, postText);
+      popupModal.renderLoading(false, renderingText);
     });
 }
 
 const handleProfilePictureSubmit = ({ picture }) => {
   function makeRequest() {
-    return api.updateAvatar(picture).then((profileInfo) => {
-      profilePicture.src = profileInfo.avatar;
+    return api.updateAvatar(picture).then((newData) => {
+      userInfo.setUserInfo({
+        name: newData.name,
+        job: newData.about,
+        avatar: newData.avatar,
+      });
     });
   }
 
@@ -71,6 +72,7 @@ const handleProfileFormSubmit = ({ name, job }) => {
       userInfo.setUserInfo({
         name: newData.name,
         job: newData.about,
+        avatar: newData.avatar,
       });
     });
   }
@@ -87,12 +89,11 @@ const handlePostFormSubmit = ({ title, url }) => {
   function makeRequest() {
     return api.createApiCard(newPost).then((createdCard) => {
       cardSection.addNewItem(createCard(createdCard));
+      formValidators[selectors.addPostForm].disableButton();
     });
   }
 
   handleSubmit(makeRequest, postFormPopup, addPostForm);
-
-  formValidators[selectors.addPostForm].disableButton();
 };
 
 const handleDelete = (card) => {
@@ -100,29 +101,23 @@ const handleDelete = (card) => {
   formValidators[selectors.confirmDeleteForm].enableButton();
   confirmDeletePopup.setSubmitFunction(() => {
     function makeRequest() {
-      return api.deleteCard(card._data._id).then(() => {
+      return api.deleteCard(card.data._id).then(() => {
         card.handleDeletePost();
       });
     }
 
-    handleSubmit(
-      makeRequest,
-      confirmDeletePopup,
-      confirmDeleteForm,
-      "Deleting...",
-      "Delete"
-    );
+    handleSubmit(makeRequest, confirmDeletePopup, confirmDeleteForm);
   });
 };
 
 const handleLike = (card) => {
   const updateLikeState = () => {
-    card._data.isLiked = !card._data.isLiked;
+    card.data.isLiked = !card.data.isLiked;
   };
 
-  if (!card._data.isLiked) {
+  if (!card.data.isLiked) {
     api
-      .likeCard(card._data._id)
+      .likeCard(card.data._id)
       .then(() => {
         card.handleAddLikeButton();
         updateLikeState();
@@ -132,7 +127,7 @@ const handleLike = (card) => {
       });
   } else {
     api
-      .dislikeCard(card._data._id)
+      .dislikeCard(card.data._id)
       .then(() => {
         card.handleRemoveLikeButton();
         updateLikeState();
@@ -142,19 +137,6 @@ const handleLike = (card) => {
       });
   }
 };
-
-function renderLoading(
-  isLoading,
-  modal,
-  renderingText = "Saving...",
-  postText = "Save"
-) {
-  if (isLoading) {
-    modal.querySelector(".modal__button").textContent = renderingText;
-  } else {
-    modal.querySelector(".modal__button").textContent = postText;
-  }
-}
 
 //Form validation
 const formValidators = {};
@@ -176,6 +158,7 @@ enableValidation(validationSettings);
 const userInfo = new UserInfo({
   name: selectors.profileName,
   job: selectors.profileJob,
+  avatar: selectors.profileAvatar,
 });
 
 const createCard = (data) => {
@@ -232,9 +215,7 @@ api
   .then((cards) => {
     cardSection.renderItems(cards);
   })
-  .catch((error) => {
-    console.error(`Error: ${error}`);
-  });
+  .catch(console.error);
 
 cardPreviewPopup.setEventListeners();
 profileFormPopup.setEventListeners();
@@ -245,98 +226,10 @@ confirmDeletePopup.setEventListeners();
 api
   .getUserInfo()
   .then((res) => {
-    return (
-      userInfo.setUserInfo({ name: res.name, job: res.about }),
-      (profilePicture.src = res.avatar)
-    );
+    return userInfo.setUserInfo({
+      name: res.name,
+      job: res.about,
+      avatar: res.avatar,
+    });
   })
-  .catch((error) => {
-    console.error(`Error: ${error}`);
-  });
-
-// api
-//   .deleteCard("66fbc3efc26271001a0ffc20")
-//   .then((result) => {
-//     return result;
-//   })
-//   .catch((err) => {
-//     console.error(err);
-//   });
-
-// api
-//   .likeCard("66fbc39ac26271001a0ffc14")
-//   .then((result) => {
-//     return result;
-//   })
-//   .catch((err) => {
-//     console.error(err);
-//   });
-
-// api
-//   .dislikeCard("66fbc39ac26271001a0ffc14")
-//   .then((result) => {
-//     return result;
-//   })
-//   .catch((err) => {
-//     console.error(err);
-//   });
-
-// api
-//   .createApiCard({
-//     name: "Yosemite Valley",
-//     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/yosemite.jpg",
-//   })
-//   .then((createdCard) => {
-//     cardSection.addNewItem(createCard(createdCard));
-//     postFormPopup.close();
-//   });
-
-// api
-//   .createApiCard({
-//     name: "Lake Louise",
-//     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/lake-louise.jpg",
-//   })
-//   .then((createdCard) => {
-//     cardSection.addNewItem(createCard(createdCard));
-//     postFormPopup.close();
-//   });
-
-// api
-//   .createApiCard({
-//     name: "Bald Mountains",
-//     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/bald-mountains.jpg",
-//   })
-//   .then((createdCard) => {
-//     cardSection.addNewItem(createCard(createdCard));
-//     postFormPopup.close();
-//   });
-
-// api
-//   .createApiCard({
-//     name: "Latemar",
-//     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/latemar.jpg",
-//   })
-//   .then((createdCard) => {
-//     cardSection.addNewItem(createCard(createdCard));
-//     postFormPopup.close();
-//   });
-
-// api
-//   .createApiCard({
-//     name: "Vanoise National Park",
-//     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/vanoise.jpg",
-//   })
-//   .then((createdCard) => {
-//     cardSection.addNewItem(createCard(createdCard));
-//     postFormPopup.close();
-//   });
-
-// api
-//   .createApiCard({
-//     name: "Lago di Braies",
-//     link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/lago.jpg",
-//   })
-//   .then((createdCard) => {
-//     cardSection.addNewItem(createCard(createdCard));
-//     postFormPopup.close();
-//   });
+  .catch(console.error);
