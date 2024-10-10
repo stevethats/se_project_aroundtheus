@@ -2,22 +2,28 @@ import "./index.css";
 import Card from "../components/Card.js";
 import FormValidator from "../components/FormValidator.js";
 import {
-  initialCards,
   validationSettings,
   selectors,
-  addPostButton,
   editProfileButton,
+  editProfileForm,
+  addPostButton,
+  addPostForm,
   profileNameInput,
   profileJobInput,
+  editProfilePictureForm,
+  profilePictureContainer,
+  confirmDeleteForm,
 } from "../utils/constants.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import PopupWithImage from "../components/PopupWithImage.js";
+import PopupWithConfirm from "../components/PopupWithConfirm.js";
 import UserInfo from "../components/UserInfo.js";
 import Section from "../components/Section.js";
+import { api } from "../components/Api.js";
 
-const userInfo = new UserInfo({
-  name: selectors.profileName,
-  job: selectors.profileJob,
+//Event Listeners
+profilePictureContainer.addEventListener("click", () => {
+  profilePictureFormPopup.open();
 });
 
 editProfileButton.addEventListener("click", () => {
@@ -32,9 +38,46 @@ addPostButton.addEventListener("click", () => {
   postFormPopup.open();
 });
 
+//Handle Submit functions
+function handleSubmit(request, popupModal, popupForm, renderingText) {
+  popupModal.renderLoading(true, renderingText);
+  request()
+    .then(() => {
+      popupModal.close();
+      popupForm.reset();
+    })
+    .catch(console.error)
+    .finally(() => {
+      popupModal.renderLoading(false, renderingText);
+    });
+}
+
+const handleProfilePictureSubmit = ({ picture }) => {
+  function makeRequest() {
+    return api.updateAvatar(picture).then((newData) => {
+      userInfo.setUserInfo({
+        name: newData.name,
+        job: newData.about,
+        avatar: newData.avatar,
+      });
+    });
+  }
+
+  handleSubmit(makeRequest, profilePictureFormPopup, editProfilePictureForm);
+};
+
 const handleProfileFormSubmit = ({ name, job }) => {
-  userInfo.setUserInfo({ name, job });
-  profileFormPopup.close();
+  function makeRequest() {
+    return api.updateProfileInfo({ name, about: job }).then((newData) => {
+      userInfo.setUserInfo({
+        name: newData.name,
+        job: newData.about,
+        avatar: newData.avatar,
+      });
+    });
+  }
+
+  handleSubmit(makeRequest, profileFormPopup, editProfileForm);
 };
 
 const handlePostFormSubmit = ({ title, url }) => {
@@ -42,11 +85,57 @@ const handlePostFormSubmit = ({ title, url }) => {
     name: title,
     link: url,
   };
-  const newCard = createCard(newPost);
-  cardSection.addNewItem(newCard);
-  postFormPopup.close();
 
-  formValidators[selectors.addPostForm].disableButton();
+  function makeRequest() {
+    return api.createApiCard(newPost).then((createdCard) => {
+      cardSection.addNewItem(createCard(createdCard));
+      formValidators[selectors.addPostForm].disableButton();
+    });
+  }
+
+  handleSubmit(makeRequest, postFormPopup, addPostForm);
+};
+
+const handleDelete = (card) => {
+  confirmDeletePopup.open();
+  formValidators[selectors.confirmDeleteForm].enableButton();
+  confirmDeletePopup.setSubmitFunction(() => {
+    function makeRequest() {
+      return api.deleteCard(card.data._id).then(() => {
+        card.handleDeletePost();
+      });
+    }
+
+    handleSubmit(makeRequest, confirmDeletePopup, confirmDeleteForm);
+  });
+};
+
+const handleLike = (card) => {
+  const updateLikeState = () => {
+    card.data.isLiked = !card.data.isLiked;
+  };
+
+  if (!card.data.isLiked) {
+    api
+      .likeCard(card.data._id)
+      .then(() => {
+        card.handleAddLikeButton();
+        updateLikeState();
+      })
+      .catch((error) => {
+        console.error(`Error adding like: ${error}`);
+      });
+  } else {
+    api
+      .dislikeCard(card.data._id)
+      .then(() => {
+        card.handleRemoveLikeButton();
+        updateLikeState();
+      })
+      .catch((error) => {
+        console.error(`Error removing like: ${error}`);
+      });
+  }
 };
 
 //Form validation
@@ -66,6 +155,12 @@ const enableValidation = (config) => {
 enableValidation(validationSettings);
 
 //create instances
+const userInfo = new UserInfo({
+  name: selectors.profileName,
+  job: selectors.profileJob,
+  avatar: selectors.profileAvatar,
+});
+
 const createCard = (data) => {
   const cardElement = new Card(
     {
@@ -73,6 +168,8 @@ const createCard = (data) => {
       handleImageClick: (imgData) => {
         cardPreviewPopup.open(imgData);
       },
+      handleLike,
+      handleDelete,
     },
     selectors.postTemplate
   );
@@ -80,18 +177,28 @@ const createCard = (data) => {
 };
 
 const cardPreviewPopup = new PopupWithImage(selectors.previewPopup);
+
+const profilePictureFormPopup = new PopupWithForm(
+  selectors.profilePictureModal,
+  handleProfilePictureSubmit
+);
+
 const profileFormPopup = new PopupWithForm(
   selectors.editProfileModal,
   handleProfileFormSubmit
 );
+
 const postFormPopup = new PopupWithForm(
   selectors.addPostModal,
   handlePostFormSubmit
 );
 
+const confirmDeletePopup = new PopupWithConfirm(
+  selectors.confirmDeletePostModal
+);
+
 const cardSection = new Section(
   {
-    items: initialCards,
     renderer: (data) => {
       const cardElement = createCard(data);
       cardSection.addItem(cardElement);
@@ -101,7 +208,28 @@ const cardSection = new Section(
 );
 
 //initialize instances
-cardSection.renderItems();
+
+//Initial Cards
+api
+  .getInitialCards()
+  .then((cards) => {
+    cardSection.renderItems(cards);
+  })
+  .catch(console.error);
+
 cardPreviewPopup.setEventListeners();
 profileFormPopup.setEventListeners();
 postFormPopup.setEventListeners();
+profilePictureFormPopup.setEventListeners();
+confirmDeletePopup.setEventListeners();
+
+api
+  .getUserInfo()
+  .then((res) => {
+    return userInfo.setUserInfo({
+      name: res.name,
+      job: res.about,
+      avatar: res.avatar,
+    });
+  })
+  .catch(console.error);

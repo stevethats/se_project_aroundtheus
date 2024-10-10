@@ -23,11 +23,14 @@
       </header>
       <main class="content page__section">
         <section class="profile">
-          <img
-            class="profile__image"
-            src="<%=require('./images/jacques-cousteau.jpg')%>"
-            alt="Avatar"
-          />
+          <div class="profile__image-container">
+            <div class="profile__image-edit"></div>
+            <img
+              class="profile__image"
+              src="<%=require('./images/jacques-cousteau.jpg')%>"
+              alt="Avatar"
+            />
+          </div>
           <div class="profile__info">
             <h1 class="profile__name">Jacques Cousteau</h1>
             <button class="profile__edit-button" type="button"></button>
@@ -52,6 +55,30 @@
       <footer class="footer page__section">
         <p class="footer__copyright">© 2022 Around The U.S.</p>
       </footer>
+    </div>
+    <!-- Modal for changing profile picture-->
+    <div class="modal" id="profile-picture-modal">
+      <div class="modal__container">
+        <button class="modal__close"></button>
+        <p class="modal__heading">Change profile picture</p>
+        <form class="modal__form" id="modal__profile-picture-form">
+          <div class="modal__form-input-section">
+            <input
+              class="modal__input"
+              id="modal__input_type_profile-picture"
+              type="link"
+              name="picture"
+              required
+              minlength="2"
+              maxlength="200"
+            />
+            <span
+              class="modal__span modal__input_type_profile-picture-error"
+            ></span>
+          </div>
+          <button class="modal__button" type="submit">Save</button>
+        </form>
+      </div>
     </div>
     <!-- Modal for editing profile -->
     <div class="modal" id="profile-modal">
@@ -119,7 +146,17 @@
             />
             <span class="modal__span modal__input_type_url-error"></span>
           </div>
-          <button class="modal__button" type="submit">Create</button>
+          <button class="modal__button" type="submit">Save</button>
+        </form>
+      </div>
+    </div>
+    <!-- Modal for confirm delete post-->
+    <div class="modal" id="post-delete-modal">
+      <div class="modal__container">
+        <button class="modal__close"></button>
+        <p class="modal__heading">Are you sure?</p>
+        <form class="modal__form" id="modal__post-delete-form">
+          <button class="modal__button" type="submit">Delete</button>
         </form>
       </div>
     </div>

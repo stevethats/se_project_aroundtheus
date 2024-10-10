@@ -1,29 +1,38 @@
 export default class Card {
-  constructor({ data, handleImageClick }, cardSelector) {
-    this._data = data;
+  constructor(
+    { data, handleImageClick, handleLike, handleDelete },
+    cardSelector
+  ) {
+    this.data = data;
     this._cardSelector = cardSelector;
     this._handleImageClick = handleImageClick;
+    this._handleLike = handleLike;
+    this._handleDelete = handleDelete;
   }
 
   _setEventListeners() {
     this._likeButton.addEventListener("click", () => {
-      this._handleLikeButton();
+      this._handleLike(this);
     });
 
     this._deleteButton.addEventListener("click", () => {
-      this._handleDeletePost();
+      this._handleDelete(this);
     });
 
     this._cardImage.addEventListener("click", () => {
-      this._handleImageClick(this._data);
+      this._handleImageClick(this.data);
     });
   }
 
-  _handleLikeButton() {
-    this._likeButton.classList.toggle("post__like_active");
+  handleAddLikeButton() {
+    this._likeButton.classList.add("post__like_active");
   }
 
-  _handleDeletePost() {
+  handleRemoveLikeButton() {
+    this._likeButton.classList.remove("post__like_active");
+  }
+
+  handleDeletePost() {
     this._cardElement.remove();
     this._cardElement = null;
   }
@@ -43,9 +52,13 @@ export default class Card {
     this._cardImage = this._cardElement.querySelector(".post__image");
     this._cardName = this._cardElement.querySelector(".post__title");
 
-    this._cardImage.src = this._data.link;
-    this._cardImage.alt = this._data.name;
-    this._cardName.textContent = this._data.name;
+    this._cardImage.src = this.data.link;
+    this._cardImage.alt = this.data.name;
+    this._cardName.textContent = this.data.name;
+
+    if (this.data.isLiked) {
+      this.handleAddLikeButton();
+    }
 
     this._setEventListeners();
 
